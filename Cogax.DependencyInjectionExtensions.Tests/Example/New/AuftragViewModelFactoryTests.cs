@@ -10,7 +10,7 @@ namespace Cogax.DependencyInjectionExtensions.Tests.Example.New
     public class AuftragViewModelFactoryTests
     {
         [TestMethod]
-        public void Test()
+        public void Create_WennBindingsAufgesetzt_DannWirdKorrektesViewModelErzeugt()
         {
             // Arrange
             IServiceCollection container = new ServiceCollection();

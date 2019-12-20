@@ -2,13 +2,16 @@
 {
     public abstract class AuftragViewModel
     {
+        // ...
     }
 
     public class AuftragDeaktiviertViewModel : AuftragViewModel
     {
+        // ...
     }
 
     public class AuftragErfasstViewModel : AuftragViewModel
     {
+        // ...
     }
 }
