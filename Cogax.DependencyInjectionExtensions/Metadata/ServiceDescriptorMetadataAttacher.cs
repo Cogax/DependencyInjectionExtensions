@@ -2,7 +2,7 @@
 
 namespace Cogax.DependencyInjectionExtensions.Metadata
 {
-    public class ServiceDescriptorMetadataAttacher<TService> : IMetadataAttacher
+    internal class ServiceDescriptorMetadataAttacher<TService> : IMetadataAttacher
     {
         public IServiceCollection ServiceCollection { get; }
         public ServiceDescriptor ServiceDescriptor { get; }
@@ -15,6 +15,7 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
 
         public IMetadataAttacher WithMetadata(string key, object value)
         {
+            // Ensure the descriptor is always only registered once
             ServiceCollection.Remove(ServiceDescriptor);
             ServiceCollection.Add(ServiceDescriptor);
 

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Cogax.DependencyInjectionExtensions.Metadata
 {
-    public class ServiceDescriptorMetadata<TService>
+    internal class ServiceDescriptorMetadata<TService>
     {
         public ServiceDescriptor ServiceDescriptor { get; }
         public string Key { get; }
@@ -11,11 +11,12 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
 
         public ServiceDescriptorMetadata(ServiceDescriptor serviceDescriptor, string key, object value)
         {
+            if (serviceDescriptor == null) throw new ArgumentException("A service descriptor is required!", nameof(serviceDescriptor));
             if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException("A binding metadata key is required!", nameof(key));
 
+            ServiceDescriptor = serviceDescriptor;
             Key = key;
             Value = value;
-            ServiceDescriptor = serviceDescriptor;
         }
     }
 }

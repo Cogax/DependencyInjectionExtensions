@@ -46,6 +46,23 @@ namespace Cogax.DependencyInjectionExtensions.Tests.Metadata
             Assert.IsNotInstanceOfType(service, typeof(MyServiceA));
         }
 
+        [TestMethod]
+        public void BindTwoServiceImplementations_WhenResolveWithoutMetadata_ThenLastBoundServiceIsResolved()
+        {
+            // Arrange
+            var container = new ServiceCollection();
+            container.Bind<IMyService, MyServiceA>().WithMetadata("typ", "A");
+            container.Bind<IMyService, MyServiceB>().WithMetadata("typ", "B");
+            IServiceProvider serviceProvider = container.BuildServiceProvider();
+
+            // Act
+            var service = serviceProvider.Resolve<IMyService>();
+
+            // Assert
+            Assert.IsInstanceOfType(service, typeof(MyServiceB));
+            Assert.IsNotInstanceOfType(service, typeof(MyServiceA));
+        }
+
         private interface IMyService { }
         private class MyServiceA : IMyService { }
         private class MyServiceB : IMyService { }
