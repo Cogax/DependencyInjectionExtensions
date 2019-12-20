@@ -1,7 +1,7 @@
 ﻿using System;
 using Cogax.DependencyInjectionExtensions.Metadata;
 
-namespace Cogax.DependencyInjectionExtensions.Example
+namespace Cogax.DependencyInjectionExtensions.Example.Old
 {
     public class AuftragViewModelFactory
     {

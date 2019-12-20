@@ -1,7 +1,7 @@
 ﻿using Cogax.DependencyInjectionExtensions.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cogax.DependencyInjectionExtensions.Example
+namespace Cogax.DependencyInjectionExtensions.Example.Old
 {
     public class AuftragModule
     {
