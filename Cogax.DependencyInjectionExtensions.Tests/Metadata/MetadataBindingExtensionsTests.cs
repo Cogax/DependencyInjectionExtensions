@@ -30,6 +30,27 @@ namespace Cogax.DependencyInjectionExtensions.Tests.Metadata
         }
 
         [TestMethod]
+        public void BindTwoServiceImplementations_WhenResolveBothWithMetadataMatcher_ThenServicesAreResolvedCorrectly()
+        {
+            // Arrange
+            var container = new ServiceCollection();
+            container.Bind<IMyService, MyServiceA>().WithMetadata("typ", "A");
+            container.Bind<IMyService, MyServiceB>().WithMetadata("typ", "B");
+            IServiceProvider serviceProvider = container.BuildServiceProvider();
+
+            // Act
+            var serviceA = serviceProvider.Resolve<IMyService>(x => (string) x.Value == "A");
+            var serviceB = serviceProvider.Resolve<IMyService>(x => (string) x.Value == "B");
+
+            // Assert
+            Assert.IsInstanceOfType(serviceA, typeof(MyServiceA));
+            Assert.IsNotInstanceOfType(serviceA, typeof(MyServiceB));
+
+            Assert.IsInstanceOfType(serviceB, typeof(MyServiceB));
+            Assert.IsNotInstanceOfType(serviceB, typeof(MyServiceA));
+        }
+
+        [TestMethod]
         public void BindTwoServiceImplementations_WhenResolveWithNotExistingMetadata_ThenLastBoundServiceIsResolved()
         {
             // Arrange
