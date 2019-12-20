@@ -18,5 +18,10 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
             Key = key;
             Value = value;
         }
+
+        public bool Matches(string key, object value)
+        {
+            return Key == key && Value == value;
+        }
     }
 }

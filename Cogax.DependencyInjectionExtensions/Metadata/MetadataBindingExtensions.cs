@@ -40,10 +40,11 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
         {
             if (key != null)
             {
-                Type bindingType = typeof(ServiceDescriptorMetadata<>).MakeGenericType(typeof(TService));
-                IEnumerable<ServiceDescriptorMetadata<TService>> bindingMetadataList = (IEnumerable<ServiceDescriptorMetadata<TService>>)serviceProvider.GetServices(bindingType);
+                Type bindingMetadataType = typeof(ServiceDescriptorMetadata<>).MakeGenericType(typeof(TService));
+                IEnumerable<ServiceDescriptorMetadata<TService>> bindingMetadataList =
+                    (IEnumerable<ServiceDescriptorMetadata<TService>>)serviceProvider.GetServices(bindingMetadataType);
 
-                ServiceDescriptorMetadata<TService> bindingMetadata = bindingMetadataList?.FirstOrDefault(x => x.Key == key && x.Value == value);
+                ServiceDescriptorMetadata<TService> bindingMetadata = bindingMetadataList?.FirstOrDefault(x => x.Matches(key, value));
                 if (bindingMetadata != null)
                 {
                     return serviceProvider.GetService(bindingMetadata.ServiceDescriptor.ImplementationType);
