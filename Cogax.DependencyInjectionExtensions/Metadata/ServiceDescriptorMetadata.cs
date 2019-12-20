@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Cogax.DependencyInjectionExtensions.Metadata
 {
-    internal class ServiceDescriptorMetadata<TService>
+    public class ServiceDescriptorMetadata<TService>
     {
         public ServiceDescriptor ServiceDescriptor { get; }
         public string Key { get; }

@@ -38,13 +38,25 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
         /// <returns>An instance of the resolved type</returns>
         public static object Resolve<TService>(this IServiceProvider serviceProvider, string key = null, object value = null)
         {
-            if (key != null)
+            return serviceProvider.Resolve<TService>(x => x.Matches(key, value));
+        }
+
+        /// <summary>
+        /// Resolve an instance of a service definition with repect to metadata settings.
+        /// </summary>
+        /// <typeparam name="TService">The generic type of the service definition to be resolved</typeparam>
+        /// <param name="serviceProvider">The service provider</param>
+        /// <param name="metadataMatcher">The function to determine if metadata matches</param>
+        /// <returns>An instance of the resolved type</returns>
+        public static object Resolve<TService>(this IServiceProvider serviceProvider, Func<ServiceDescriptorMetadata<TService>, bool> metadataMatcher)
+        {
+            if (metadataMatcher != null)
             {
                 Type bindingMetadataType = typeof(ServiceDescriptorMetadata<>).MakeGenericType(typeof(TService));
                 IEnumerable<ServiceDescriptorMetadata<TService>> bindingMetadataList =
                     (IEnumerable<ServiceDescriptorMetadata<TService>>)serviceProvider.GetServices(bindingMetadataType);
 
-                ServiceDescriptorMetadata<TService> bindingMetadata = bindingMetadataList?.FirstOrDefault(x => x.Matches(key, value));
+                ServiceDescriptorMetadata<TService> bindingMetadata = bindingMetadataList?.FirstOrDefault(x => metadataMatcher(x));
                 if (bindingMetadata != null)
                 {
                     return serviceProvider.GetService(bindingMetadata.ServiceDescriptor.ImplementationType);
@@ -53,5 +65,6 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
 
             return serviceProvider.GetService(typeof(TService));
         }
+
     }
 }
