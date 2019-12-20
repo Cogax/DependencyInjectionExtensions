@@ -8,7 +8,26 @@ TODO
 
 ## Usage
 
-TODO
+**Metadata Bindings**
+
+Related to https://github.com/ninject/Ninject/wiki/Contextual-Binding
+
+```csharp
+// Register service implementations with metadata
+var services = new ServiceCollection();
+services.Bind<IService, ServiceA>().WithMetadata(BindingKeys.MyKey, "A");
+services.Bind<IService, ServiceB>().WithMetadata(BindingKeys.MyKey, "B");
+
+// Resolve service implementations
+var serviceProvider = services.BuildServiceProvider();
+ServiceA service = serviceProvider.Resolve<IService>(BindingKeys.MyKey, "A");
+
+// Typed metadata keys
+public class BindingKeys
+{
+    public const string MyKey = "MyKey";
+}
+```
 
 ## Contributing
 
