@@ -21,7 +21,7 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
 
         public bool Matches(string key, object value)
         {
-            return Key == key && Value == value;
+            return Key.Equals(key) && Value.Equals(value);
         }
     }
 }

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cogax.DependencyInjectionExtensions.Example\Cogax.DependencyInjectionExtensions.Example.csproj" />
     <ProjectReference Include="..\Cogax.DependencyInjectionExtensions\Cogax.DependencyInjectionExtensions.csproj" />
   </ItemGroup>
 

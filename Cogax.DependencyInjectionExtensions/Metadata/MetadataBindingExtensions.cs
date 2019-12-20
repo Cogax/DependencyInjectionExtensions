@@ -36,7 +36,7 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
         /// <param name="key">The optional metadata key</param>
         /// <param name="value">The optional metadata value</param>
         /// <returns>An instance of the resolved type</returns>
-        public static object Resolve<TService>(this IServiceProvider serviceProvider, string key = null, object value = null)
+        public static TService Resolve<TService>(this IServiceProvider serviceProvider, string key = null, object value = null)
         {
             return serviceProvider.Resolve<TService>(x => x.Matches(key, value));
         }
@@ -48,7 +48,7 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
         /// <param name="serviceProvider">The service provider</param>
         /// <param name="metadataMatcher">The function to determine if metadata matches</param>
         /// <returns>An instance of the resolved type</returns>
-        public static object Resolve<TService>(this IServiceProvider serviceProvider, Func<ServiceDescriptorMetadata<TService>, bool> metadataMatcher)
+        public static TService Resolve<TService>(this IServiceProvider serviceProvider, Func<ServiceDescriptorMetadata<TService>, bool> metadataMatcher)
         {
             if (metadataMatcher != null)
             {
@@ -59,12 +59,11 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
                 ServiceDescriptorMetadata<TService> bindingMetadata = bindingMetadataList?.FirstOrDefault(x => metadataMatcher(x));
                 if (bindingMetadata != null)
                 {
-                    return serviceProvider.GetService(bindingMetadata.ServiceDescriptor.ImplementationType);
+                    return (TService) serviceProvider.GetService(bindingMetadata.ServiceDescriptor.ImplementationType);
                 }
             }
 
-            return serviceProvider.GetService(typeof(TService));
+            return (TService) serviceProvider.GetService(typeof(TService));
         }
-
     }
 }
