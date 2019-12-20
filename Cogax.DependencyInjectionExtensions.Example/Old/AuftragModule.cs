@@ -1,5 +1,4 @@
-﻿using Cogax.DependencyInjectionExtensions.Metadata;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Cogax.DependencyInjectionExtensions.Example.Old
 {
@@ -7,16 +6,8 @@ namespace Cogax.DependencyInjectionExtensions.Example.Old
     {
         public static void Register(IServiceCollection container)
         {
-            container.Bind<AuftragViewModel, AuftragDeaktiviertViewModel>()
-                .WithMetadata(BindingKeys.AuftragsStatus, AuftragStatus.Deaktiviert);
-
-            container.Bind<AuftragViewModel, AuftragErfasstViewModel>()
-                .WithMetadata(BindingKeys.AuftragsStatus, AuftragStatus.Erfasst);
+            container.AddTransient<AuftragDeaktiviertViewModel>();
+            container.AddTransient<AuftragErfasstViewModel>();
         }
-    }
-
-    public class BindingKeys
-    {
-        public const string AuftragsStatus = "AuftragsStatus";
     }
 }

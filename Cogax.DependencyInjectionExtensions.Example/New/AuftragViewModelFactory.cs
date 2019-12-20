@@ -1,8 +1,7 @@
 ﻿using System;
-using Cogax.DependencyInjectionExtensions.Example.New;
-using Microsoft.Extensions.DependencyInjection;
+using Cogax.DependencyInjectionExtensions.Metadata;
 
-namespace Cogax.DependencyInjectionExtensions.Example.Old
+namespace Cogax.DependencyInjectionExtensions.Example.New
 {
     public class AuftragViewModelFactory
     {
@@ -15,16 +14,7 @@ namespace Cogax.DependencyInjectionExtensions.Example.Old
 
         public AuftragViewModel Create(Auftrag auftrag)
         {
-            AuftragViewModel viewModel = null;
-
-            if (auftrag.Status.Equals(AuftragStatus.Deaktiviert))
-            {
-                viewModel = _serviceProvider.GetService<AuftragDeaktiviertViewModel>();
-            }
-            else if (auftrag.Status.Equals(AuftragStatus.Erfasst))
-            {
-                viewModel = _serviceProvider.GetService<AuftragErfasstViewModel>();
-            }
+            AuftragViewModel viewModel = _serviceProvider.Resolve<AuftragViewModel>(BindingKeys.AuftragsStatus, auftrag.Status);
 
             if (viewModel == null)
             {

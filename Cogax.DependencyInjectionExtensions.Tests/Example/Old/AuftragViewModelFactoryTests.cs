@@ -1,10 +1,10 @@
 ﻿using System;
 using Cogax.DependencyInjectionExtensions.Example;
-using Cogax.DependencyInjectionExtensions.Example.New;
+using Cogax.DependencyInjectionExtensions.Example.Old;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Cogax.DependencyInjectionExtensions.Tests.Example.New
+namespace Cogax.DependencyInjectionExtensions.Tests.Example.Old
 {
     [TestClass]
     public class AuftragViewModelFactoryTests
