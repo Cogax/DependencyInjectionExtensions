@@ -34,9 +34,8 @@ namespace Cogax.DependencyInjectionExtensions.Tests
         {
             // Arrange
             var container = new ServiceCollection();
-            container.AddTransientWithMetadata<IMyService, MyServiceA>("typ", "A");
-            container.AddTransientWithMetadata<IMyService, MyServiceB>("typ", "B");
-
+            container.AddTransient<IMyService, MyServiceA>().WithMetadata("typ", "A");
+            container.AddTransient<IMyService, MyServiceB>().WithMetadata("typ", "B");
             IServiceProvider serviceProvider = container.BuildServiceProvider();
 
             // Act

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cogax.DependencyInjectionExtensions.Bindings
 {
@@ -19,12 +20,12 @@ namespace Cogax.DependencyInjectionExtensions.Bindings
     }
 
     // https://github.com/ninject/Ninject/blob/master/src/Ninject/Planning/Bindings/BindingMetadata.cs
-    public class NewBindingMetadata
+    public class ServiceDescriptorMetadata
     {
         public string Key { get; }
         public object Value { get; }
 
-        public NewBindingMetadata(string key, object value)
+        public ServiceDescriptorMetadata(string key, object value)
         {
             if(string.IsNullOrWhiteSpace(key)) throw new ArgumentException("A binding metadata key is required!", nameof(key));
 
@@ -33,13 +34,14 @@ namespace Cogax.DependencyInjectionExtensions.Bindings
         }
     }
 
-    public class NewBindingMetadata<TService> : NewBindingMetadata
+    public class ServiceDescriptorMetadata<TService> : ServiceDescriptorMetadata
     {
-        public Type ImplementationType { get; }
+        public ServiceDescriptor ServiceDescriptor { get; }
 
-        public NewBindingMetadata(Type implementationType, string key, object value) : base(key, value)
+        public ServiceDescriptorMetadata(ServiceDescriptor serviceDescriptor, string key, object value)
+            : base(key, value)
         {
-            ImplementationType = implementationType;
+            ServiceDescriptor = serviceDescriptor;
         }
     }
 }

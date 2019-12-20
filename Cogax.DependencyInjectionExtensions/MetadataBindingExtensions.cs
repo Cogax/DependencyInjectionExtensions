@@ -8,26 +8,54 @@ namespace Cogax.DependencyInjectionExtensions
 {
     public static class MetadataBindingExtensions
     {
-        public static void AddTransientWithMetadata<TService, TImplementation>(this IServiceCollection services, string key, object value)
-            where TService : class
-            where TImplementation : class, TService
+        public static IMetadataAttacher AddTransient<TService, TImplementation>(this IServiceCollection services)
         {
-            services.AddSingleton(new NewBindingMetadata<TService>(typeof(TImplementation), key, value));
-            services.AddTransient<TImplementation>();
+            ServiceDescriptor realDescriptor = new ServiceDescriptor(typeof(TService), typeof(TImplementation), ServiceLifetime.Transient);
+            ServiceDescriptor implementationOnlyDescriptor = new ServiceDescriptor(typeof(TImplementation), typeof(TImplementation), ServiceLifetime.Transient);
+            services.Add(implementationOnlyDescriptor);
+            return new ServiceDescriptorMetadataAttacher<TService>(services, implementationOnlyDescriptor);
         }
 
         public static object GetServiceWithMetadata<TService>(this IServiceProvider serviceProvider, string key, object value)
         {
-            Type bindingType = typeof(NewBindingMetadata<>).MakeGenericType(typeof(TService));
-            IEnumerable<NewBindingMetadata<TService>> bindingMetadatas = (IEnumerable<NewBindingMetadata<TService>>)serviceProvider.GetServices(bindingType);
+            Type bindingType = typeof(ServiceDescriptorMetadata<>).MakeGenericType(typeof(TService));
+            IEnumerable<ServiceDescriptorMetadata<TService>> bindingMetadatas = (IEnumerable<ServiceDescriptorMetadata<TService>>)serviceProvider.GetServices(bindingType);
 
-            NewBindingMetadata<TService> bindingMetadata = bindingMetadatas?.FirstOrDefault(x => x.Key == key && x.Value == value);
+            ServiceDescriptorMetadata<TService> bindingMetadata = bindingMetadatas?.FirstOrDefault(x => x.Key == key && x.Value == value);
             if (bindingMetadata != null)
             {
-                return serviceProvider.GetService(bindingMetadata.ImplementationType);
+                return serviceProvider.GetService(bindingMetadata.ServiceDescriptor.ImplementationType);
             }
 
             return serviceProvider.GetService(typeof(TService));
+        }
+
+        public interface IMetadataAttacher
+        {
+            IMetadataAttacher WithMetadata(string key, object value);
+        }
+
+        public class ServiceDescriptorMetadataAttacher<TService> : IMetadataAttacher
+        {
+            public IServiceCollection ServiceCollection { get; }
+            public ServiceDescriptor ServiceDescriptor { get; }
+
+            public ServiceDescriptorMetadataAttacher(IServiceCollection serviceCollection, ServiceDescriptor serviceDescriptor)
+            {
+                ServiceCollection = serviceCollection;
+                ServiceDescriptor = serviceDescriptor;
+            }
+
+            public IMetadataAttacher WithMetadata(string key, object value)
+            {
+                ServiceCollection.Remove(ServiceDescriptor);
+                ServiceCollection.Add(ServiceDescriptor);
+
+                ServiceDescriptorMetadata<TService> descriptorMetadata = new ServiceDescriptorMetadata<TService>(ServiceDescriptor, key, value);
+                ServiceCollection.AddSingleton(descriptorMetadata);
+
+                return this;
+            }
         }
     }
 }
