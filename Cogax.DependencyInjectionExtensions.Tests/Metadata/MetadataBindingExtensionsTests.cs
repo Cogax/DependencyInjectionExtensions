@@ -30,6 +30,27 @@ namespace Cogax.DependencyInjectionExtensions.Tests.Metadata
         }
 
         [TestMethod]
+        public void BindTwoServiceImplementations_WhenEnumMetadataIsUsed_ThenServicesAreResolvedCorrectly()
+        {
+            // Arrange
+            var container = new ServiceCollection();
+            container.Bind<IMyService, MyServiceA>().WithMetadata(BindingKeys.EventType, MyEnum.A);
+            container.Bind<IMyService, MyServiceB>().WithMetadata(BindingKeys.EventType, MyEnum.B);
+            IServiceProvider serviceProvider = container.BuildServiceProvider();
+
+            // Act
+            var serviceA = serviceProvider.Resolve<IMyService>(BindingKeys.EventType, MyEnum.A);
+            var serviceB = serviceProvider.Resolve<IMyService>(BindingKeys.EventType, MyEnum.B);
+
+            // Assert
+            Assert.IsInstanceOfType(serviceA, typeof(MyServiceA));
+            Assert.IsNotInstanceOfType(serviceA, typeof(MyServiceB));
+
+            Assert.IsInstanceOfType(serviceB, typeof(MyServiceB));
+            Assert.IsNotInstanceOfType(serviceB, typeof(MyServiceA));
+        }
+
+        [TestMethod]
         public void BindTwoServiceImplementations_WhenResolveBothWithMetadataMatcher_ThenServicesAreResolvedCorrectly()
         {
             // Arrange
@@ -89,6 +110,7 @@ namespace Cogax.DependencyInjectionExtensions.Tests.Metadata
             public const string EventType = "EventType";
         }
 
+        private enum MyEnum { A, B }
         private interface IMyService { }
         private class MyServiceA : IMyService { }
         private class MyServiceB : IMyService { }

@@ -15,10 +15,6 @@ namespace Cogax.DependencyInjectionExtensions.Metadata
 
         public IMetadataAttacher WithMetadata(string key, object value)
         {
-            // Ensure the descriptor is always only registered once
-            ServiceCollection.Remove(ServiceDescriptor);
-            ServiceCollection.Add(ServiceDescriptor);
-
             ServiceDescriptorMetadata<TService> descriptorMetadata = new ServiceDescriptorMetadata<TService>(ServiceDescriptor, key, value);
             ServiceCollection.AddSingleton(descriptorMetadata);
 
